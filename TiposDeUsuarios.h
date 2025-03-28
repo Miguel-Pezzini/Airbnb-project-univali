@@ -10,7 +10,7 @@ class Anfitriao : public Usuario {
   vector<Imovel> imoveisCriados;
 
 public:
-  Anfitriao(string nome, int telefone) : Usuario(nome, telefone) {}
+  Anfitriao(string nome, string senha, int telefone) : Usuario(nome, senha, telefone) {}
 
   Imovel criarImovel(string endereco, TiposImovel tipo, int capacidade,
                      float precoDiaria, int dia, int mes, int ano) {
@@ -27,7 +27,7 @@ class Hospede : public Usuario {
   vector<Imovel> imovelAlugado;
 
 public:
-  Hospede(string nome, int telefone) : Usuario(nome, telefone){};
+  Hospede(string nome, string senha, int telefone) : Usuario(nome, senha, telefone){};
 
   Imovel alugarImovel(Imovel imovel) {
     imovel.setIsAlugado(true);

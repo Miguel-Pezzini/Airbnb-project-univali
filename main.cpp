@@ -1,34 +1,42 @@
-#include "BancoDeDados.h"
+#include "dialogos.h"
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 int main() {
   BancoDeDados bancoDeDados;
+  int idUsuarioLogado = -1;
+  bool isAnfitriao, isHospede;
 
   while (true) {
-    int opcao;
-    cout << "1 - Criar conta\n2 - Entrar na conta\n3 - Sair";
-    cin >> opcao;
+    int option;
+    if (idUsuarioLogado > 0) {
+      while (isAnfitriao) {
+        cout << "1 - Criar Imovel\n2 - Ver seus imoveis\n3 - Editar algum imovel \n4 - Excluir algum imovel \n5- Sair";
+        cin>>option;
 
-    switch (opcao) {
-    case 1:
-      string nome, senha;
-      int telefone, opcaoUsuario;
-      cout << "Digite seu nome: ";
-      cin >> nome;
-      cout << "Digite sua senha: ";
-      cin >> nome;
-      cout << "Digite seu telefone: ";
-      cin >> telefone;
-      cout << "Qual seu tipo de usuário?\n1 - Anfitrião\n2 - Hóspede";
-      cin >> opcaoUsuario;
-      if (opcaoUsuario == 1) {
-        bancoDeDados.criarAnfitriao(nome, senha, telefone);
-      } else if (opcaoUsuario == 2) {
-        bancoDeDados.criarHospede(nome, senha, telefone);
+        switch (option) {
+          case 1:
+            criarImovel(bancoDeDados, idUsuarioLogado);
+            break;
+          case 2:
+            bancoDeDados.listarImoveis(idUsuarioLogado);
+            break;
+        }
       }
+      if (isHospede) {}
+    }
+    cout << "1 - Criar conta\n2 - Entrar na conta\n3 - Sair";
+    cin >> option;
+
+    switch (option) {
+      case 1:
+        criarUsuario(bancoDeDados);
       break;
+      case 2:
+        idUsuarioLogado = logarUsuario(bancoDeDados, isAnfitriao, isHospede);
+        break;
+      case 3:
+        return 0;
     }
   }
   return 0;

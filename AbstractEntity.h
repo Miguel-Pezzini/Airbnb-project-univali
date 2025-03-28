@@ -11,7 +11,7 @@ class AbstractEntity {
 public:
   AbstractEntity(long id) { this->id = id + 1; }
 
-  long getId() { return this->id; }
+  long getId() const { return this->id; }
 };
 
 #endif

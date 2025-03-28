@@ -50,12 +50,13 @@ public:
     quantidadeDeImoveis++;
   }
 
-  string getEndereco() { return this->endereco; }
-  TiposImovel getTipo() { return this->tipo; }
-  int getCapacidade() { return this->capacidade; }
-  float getPrecoDiaria() { return this->precoDiaria; }
-  long getAnfitriaoResponsavelId() { return this->anfitriaoResponsavelId; }
-  Tempo getDataAluguel() { return this->dataAluguel; }
+  string getEndereco() const { return this->endereco; }
+  TiposImovel getTipo() const { return this->tipo; }
+  int getCapacidade() const { return this->capacidade; }
+  float getPrecoDiaria() const{ return this->precoDiaria; }
+  long getAnfitriaoResponsavelId() const { return this->anfitriaoResponsavelId; }
+  Tempo getDataAluguel() const{ return this->dataAluguel; }
+  bool getIsAlugado() const{ return this->isAlugado; }
   void setEndereco(string endereco) { this->endereco = endereco; }
   void setTipo(TiposImovel tipo) { this->tipo = tipo; }
   void setCapacidade(int capacidade) { this->capacidade = capacidade; }
