@@ -20,8 +20,8 @@ public:
   };
 
   void adicionarImovel(Imovel imovel) { this->imoveis.push_back(imovel); }
-  void adicionarAnfitriao(Anfitriao anfitriao) { this->anfitrioes.push_back(anfitriao); }
-  void adicionarHospede(Hospede hospede) { this->hospedes.push_back(hospede); }
+  void adicionarAnfitriao(Anfitriao anfitriao) { this->anfitrioes.push_back(anfitriao); this->usuarios.push_back(anfitriao); }
+  void adicionarHospede(Hospede hospede) { this->hospedes.push_back(hospede); this->usuarios.push_back(hospede); }
 
   void criarImovel(string endereco, TiposImovel tipo, int capacidade, float precoDiaria, long anfitriaoResponsavelId, int dia, int mes, int ano) {
     this->adicionarImovel(Imovel(endereco, tipo, capacidade, precoDiaria, anfitriaoResponsavelId, dia, mes, ano));

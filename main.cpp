@@ -11,7 +11,7 @@ int main() {
     int option;
     if (idUsuarioLogado > 0) {
       while (isAnfitriao) {
-        cout << "1 - Criar Imovel\n2 - Ver seus imoveis\n3 - Sair";
+        cout << "1 - Criar Imovel\n2 - Ver seus imoveis\n3 - Deslogar";
         cin>>option;
 
         switch (option) {
@@ -30,7 +30,7 @@ int main() {
         }
       }
       while (isHospede) {
-        cout << "1 - Alugar um Imovel\n2 - Ver seus imoveis alugados\n3 - Sair";
+        cout << "1 - Alugar um Imovel\n2 - Ver seus imoveis alugados\n3 - Deslogar";
         cin>>option;
         switch (option) {
           case 1:
