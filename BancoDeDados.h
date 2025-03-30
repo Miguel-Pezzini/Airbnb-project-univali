@@ -33,6 +33,30 @@ public:
     this->adicionarHospede(Hospede(nome, senha, telefone));
   }
 
+  void salvarImovel(Imovel imovel) {
+    for (int i = 0; i < this->imoveis.size(); i++) {
+      if (this->imoveis.at(i).getId() == imovel.getId()) {
+        this->imoveis.at(i) = imovel;
+      }
+    }
+  }
+
+  Imovel getImovel(int idImovel) {
+    for (int i = 0; i < this->imoveis.size(); i++) {
+      if (this->imoveis.at(i).getId() == idImovel) {
+        return this->imoveis.at(i);
+      }
+    }
+  }
+
+  void alugarImovel(int idImovel, int idUsuarioLogado) {
+    Imovel imovel = getImovel(idImovel);
+    imovel.setHospedeId(idUsuarioLogado);
+    imovel.setIsAlugado(true);
+
+    this->salvarImovel(imovel);
+  }
+
   int logar(string nome, string senha, bool &isAnfitriao, bool &isHospede) {
     for (int i = 0; i < this->anfitrioes.size(); i++) {
       if (nome == this->anfitrioes.at(i).getNome() && senha == this->anfitrioes.at(i).getSenha()) {
@@ -51,7 +75,19 @@ public:
 
     return -1;
   }
-  void listarImoveis(int idUsuarioLogado) {
+
+  vector<Imovel> getImoveisDisponiveis() {
+    vector<Imovel> imoveisDisponiveis;
+    for (int i = 0; i < this->imoveis.size(); i++) {
+      if (this->imoveis.at(i).getIsAlugado()) {
+        break;
+      }
+      imoveisDisponiveis.push_back(this->imoveis.at(i));
+    }
+
+    return imoveisDisponiveis;
+  }
+  void listarImoveisCriadosDoUsuario(int idUsuarioLogado) {
     for (const auto& imovel : imoveis) {
       if (idUsuarioLogado == imovel.getAnfitriaoResponsavelId()) {
         cout << "Id do Imovel: " << imovel.getId() << endl;
@@ -66,6 +102,89 @@ public:
       }
     }
   }
+
+  void listarImoveisAlugadosDoUsuario(int idUsuarioLogado) {
+    for (const auto& imovel : imoveis) {
+      if (idUsuarioLogado == imovel.getHospedeId()) {
+        cout << "Id do Imovel: " << imovel.getId() << endl;
+        cout << "Preco da diária: R$ " << imovel.getPrecoDiaria() << endl;
+        cout << "Endereço: " << imovel.getEndereco() << endl;
+        cout << "Data do aluguel: " << imovel.getDataAluguel().dia
+             << "/" << imovel.getDataAluguel().mes
+             << "/" << imovel.getDataAluguel().ano << endl;
+        cout << "Status: " << (imovel.getIsAlugado() ? "🔴 Reservado" : "🟢 Disponível") << endl;
+
+        cout << "--------------------------------------\n";
+      }
+    }
+  }
+
+  void listarImoveis(vector<Imovel> &imoveis){
+    for (const auto& imovel : imoveis) {
+        cout << "Id do Imovel: " << imovel.getId() << endl;
+        cout << "Preco da diária: R$ " << imovel.getPrecoDiaria() << endl;
+        cout << "Endereço: " << imovel.getEndereco() << endl;
+        cout << "Data do aluguel: " << imovel.getDataAluguel().dia
+             << "/" << imovel.getDataAluguel().mes
+             << "/" << imovel.getDataAluguel().ano << endl;
+        cout << "Status: " << (imovel.getIsAlugado() ? "🔴 Reservado" : "🟢 Disponível") << endl;
+
+        cout << "--------------------------------------\n";
+    }
+  }
+
+  vector<Imovel> ordenarImoveisPorPrecoELocalizacao(
+    vector<Imovel> imoveisDisponiveisFiltradosPorData, float precoMAX,
+    float precoMIN) {
+    vector<Imovel> imoveisFiltradosPorPreco;
+    for (Imovel imovel : imoveisDisponiveisFiltradosPorData) {
+      if (imovel.getPrecoDiaria() <= precoMAX &&
+          imovel.getPrecoDiaria() >= precoMIN) {
+        imoveisFiltradosPorPreco.push_back(imovel);
+          }
+    }
+    return imoveisFiltradosPorPreco;
+  }
+
+  vector<Imovel> filtrarImoveis() {
+    vector<Imovel> imoveisDisponiveis = getImoveisDisponiveis();
+
+    int dia, mes, ano, opcao;
+    std::cout << "Qual o dia do aluguel?";
+    cin >> dia;
+    std::cout << "Qual o mes do aluguel?";
+    cin >> mes;
+    std::cout << "Qual o ano do aluguel?";
+    cin >> ano;
+
+    vector<Imovel> imoveisDisponiveisFiltradosPorData;
+    for (Imovel imovel : imoveisDisponiveis) {
+      if (imovel.getDataAluguel().getDia() == dia &&
+          imovel.getDataAluguel().getMes() == mes &&
+          imovel.getDataAluguel().getAno() == ano) {
+        imoveisDisponiveisFiltradosPorData.push_back(imovel);
+          }
+    }
+
+    std::cout << "Você gostaria de filtar por preço? 1 para sim, 0 para não";
+    std::cin >> opcao;
+    if (opcao == 1) {
+      int precoMAX;
+      int precoMIN;
+      std::cout << "Qual o preço máximo?";
+      std::cin >> precoMAX;
+      std::cout << "Qual o preço mínimo?";
+      std::cin >> precoMIN;
+      vector<Imovel> imoveisFiltradosPorPreco =
+          ordenarImoveisPorPrecoELocalizacao(imoveisDisponiveisFiltradosPorData,
+                                             precoMAX, precoMIN);
+      return imoveisFiltradosPorPreco;
+    }
+
+    return imoveisDisponiveisFiltradosPorData;
+  }
+
+
 };
 
 #endif

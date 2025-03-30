@@ -11,19 +11,43 @@ int main() {
     int option;
     if (idUsuarioLogado > 0) {
       while (isAnfitriao) {
-        cout << "1 - Criar Imovel\n2 - Ver seus imoveis\n3 - Editar algum imovel \n4 - Excluir algum imovel \n5- Sair";
+        cout << "1 - Criar Imovel\n2 - Ver seus imoveis\n3 - Sair";
         cin>>option;
 
         switch (option) {
           case 1:
+            limparTela();
             criarImovel(bancoDeDados, idUsuarioLogado);
             break;
           case 2:
-            bancoDeDados.listarImoveis(idUsuarioLogado);
+            limparTela();
+            listarImoveisCriados(bancoDeDados, idUsuarioLogado);
             break;
+          case 3:
+            limparTela();
+            isAnfitriao = false;
+            idUsuarioLogado = -1;
         }
       }
-      if (isHospede) {}
+      while (isHospede) {
+        cout << "1 - Alugar um Imovel\n2 - Ver seus imoveis alugados\n3 - Sair";
+        cin>>option;
+        switch (option) {
+          case 1:
+            limparTela();
+            alugarImovel(bancoDeDados, idUsuarioLogado);
+          break;
+          case 2:
+            limparTela();
+            listarImoveisAlugados(bancoDeDados, idUsuarioLogado);
+          break;
+          case 3:
+            limparTela();
+            isHospede = false;
+           idUsuarioLogado = -1;
+          break;
+        }
+      }
     }
     cout << "1 - Criar conta\n2 - Entrar na conta\n3 - Sair";
     cin >> option;

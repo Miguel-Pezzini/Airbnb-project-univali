@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 class AbstractEntity {
   long id;
 

@@ -6,8 +6,21 @@
 
 using namespace std;
 
+
 enum TiposImovel { CASA, APARTAMENTO, CHALE };
 
+TiposImovel intToTipos(int tipo) {
+  switch (tipo) {
+    case 0:
+      return TiposImovel::CASA;
+    case 1:
+      return TiposImovel::APARTAMENTO;
+    case 2:
+      return TiposImovel::CHALE;
+    default:
+      return TiposImovel::CASA;
+  }
+}
 struct Tempo {
   int dia;
   int mes;
@@ -37,6 +50,7 @@ private:
   static int quantidadeDeImoveis;
   Tempo dataAluguel;
   bool isAlugado = false;
+  long hospedeId;
 
 public:
   Imovel(string endereco, TiposImovel tipo, int capacidade, float precoDiaria,
@@ -46,10 +60,12 @@ public:
     this->tipo = tipo;
     this->capacidade = capacidade;
     this->precoDiaria = precoDiaria;
+    this->hospedeId = -1;
     this->anfitriaoResponsavelId = anfitriaoResponsavelId;
     quantidadeDeImoveis++;
   }
 
+  int getHospedeId() const {return this->hospedeId; }
   string getEndereco() const { return this->endereco; }
   TiposImovel getTipo() const { return this->tipo; }
   int getCapacidade() const { return this->capacidade; }
@@ -58,6 +74,7 @@ public:
   Tempo getDataAluguel() const{ return this->dataAluguel; }
   bool getIsAlugado() const{ return this->isAlugado; }
   void setEndereco(string endereco) { this->endereco = endereco; }
+  void setHospedeId(long hospedeId) {this->hospedeId = hospedeId; }
   void setTipo(TiposImovel tipo) { this->tipo = tipo; }
   void setCapacidade(int capacidade) { this->capacidade = capacidade; }
   void setPrecoDiaria(float precoDiaria) { this->precoDiaria = precoDiaria; }
