@@ -11,17 +11,21 @@ int main() {
     int option;
     if (idUsuarioLogado > 0) {
       while (isAnfitriao) {
+        Anfitriao anfitriaoLogado = bancoDeDados.getAnfitriao(idUsuarioLogado);
         cout << "1 - Criar Imovel\n2 - Ver seus imoveis\n3 - Deslogar";
         cin>>option;
 
         switch (option) {
           case 1:
             limparTela();
-            criarImovel(bancoDeDados, idUsuarioLogado);
+          {
+            Imovel imovelCriado = anfitriaoLogado.criarImovel();
+            bancoDeDados.adicionarImovel(imovelCriado);
+          }
             break;
           case 2:
             limparTela();
-            listarImoveisCriados(bancoDeDados, idUsuarioLogado);
+            anfitriaoLogado.listarImoveisCriados(bancoDeDados.getImoveis());
             break;
           case 3:
             limparTela();
@@ -30,21 +34,25 @@ int main() {
         }
       }
       while (isHospede) {
+        Hospede hospedeLogado = bancoDeDados.getHospede(idUsuarioLogado);
         cout << "1 - Alugar um Imovel\n2 - Ver seus imoveis alugados\n3 - Deslogar";
         cin>>option;
         switch (option) {
           case 1:
             limparTela();
-            alugarImovel(bancoDeDados, idUsuarioLogado);
+          {
+            Imovel imovel = hospedeLogado.alugarImovel(bancoDeDados.getImoveis());
+            bancoDeDados.adicionarImovel(imovel);
+          }
           break;
           case 2:
             limparTela();
-            listarImoveisAlugados(bancoDeDados, idUsuarioLogado);
+             hospedeLogado.listarImoveisAlugados(bancoDeDados.getImoveis());
           break;
           case 3:
             limparTela();
             isHospede = false;
-           idUsuarioLogado = -1;
+            idUsuarioLogado = -1;
           break;
         }
       }
