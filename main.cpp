@@ -35,21 +35,31 @@ int main() {
       }
       while (isHospede) {
         Hospede hospedeLogado = bancoDeDados.getHospede(idUsuarioLogado);
-        cout << "1 - Alugar um Imovel\n2 - Ver seus imoveis alugados\n3 - Deslogar";
+        cout << "1 - Alugar um Imovel\n2 - Ver seus imoveis alugados\n3 - Cancelar uma reserva\n4 - Deslogar";
         cin>>option;
         switch (option) {
           case 1:
             limparTela();
           {
-            Imovel imovel = hospedeLogado.alugarImovel(bancoDeDados.getImoveis());
-            bancoDeDados.adicionarImovel(imovel);
+            ImovelAlugado imovelAlugado = hospedeLogado.alugarImovel(bancoDeDados.getImoveis());
+            bancoDeDados.salvarHospede(hospedeLogado);
+            bancoDeDados.salvarImovelAlugado(imovelAlugado);
+            bancoDeDados.adicionarImovelAlugado(imovelAlugado);
           }
           break;
           case 2:
             limparTela();
-             hospedeLogado.listarImoveisAlugados(bancoDeDados.getImoveis());
+             hospedeLogado.listarImoveisAlugadosAtivosHospede(bancoDeDados.getImoveis());
           break;
           case 3:
+            limparTela();
+          {
+            ImovelAlugado imovelCancelado = hospedeLogado.cancelarReserva(bancoDeDados.getImoveis(), bancoDeDados.getImoveisAlugados());
+            bancoDeDados.salvarImovelAlugado(imovelCancelado);
+          }
+
+          break;
+          case 4:
             limparTela();
             isHospede = false;
             idUsuarioLogado = -1;

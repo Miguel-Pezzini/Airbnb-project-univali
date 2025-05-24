@@ -3,6 +3,9 @@
 
 #include "AbstractEntity.h"
 #include <string>
+#include <vector>
+
+#include "ImovelAlugado.h"
 
 using namespace std;
 
@@ -21,67 +24,41 @@ TiposImovel intToTipos(int tipo) {
       return TiposImovel::CASA;
   }
 }
-struct Tempo {
-  int dia;
-  int mes;
-  int ano;
-
-  Tempo(int dia, int mes, int ano) {
-    this->dia = dia;
-    this->mes = mes;
-    this->ano = ano;
-  }
-
-  string toString() const {
-    return to_string(dia) + "/" + to_string(mes) + "/" + to_string(ano);
-  }
-  int getDia() const { return dia; }
-  int getMes() const { return mes; }
-  int getAno() const { return ano; }
-};
 
 class Imovel : public AbstractEntity {
-private:
   long anfitriaoResponsavelId;
   string endereco;
   TiposImovel tipo;
   int capacidade;
   float precoDiaria;
   static int quantidadeDeImoveis;
-  Tempo dataAluguel;
-  bool isAlugado = false;
-  long hospedeId;
+  vector<ImovelAlugado> imoveisAlugados;
 
 public:
   Imovel(string endereco, TiposImovel tipo, int capacidade, float precoDiaria,
-         long anfitriaoResponsavelId, int dia, int mes, int ano)
-      : AbstractEntity(quantidadeDeImoveis), dataAluguel(dia, mes, ano) {
+         long anfitriaoResponsavelId)
+      : AbstractEntity(quantidadeDeImoveis) {
     this->endereco = endereco;
     this->tipo = tipo;
     this->capacidade = capacidade;
     this->precoDiaria = precoDiaria;
-    this->hospedeId = -1;
     this->anfitriaoResponsavelId = anfitriaoResponsavelId;
+    this->imoveisAlugados = vector<ImovelAlugado>();
     quantidadeDeImoveis++;
   }
 
-  int getHospedeId() const {return this->hospedeId; }
   string getEndereco() const { return this->endereco; }
   TiposImovel getTipo() const { return this->tipo; }
   int getCapacidade() const { return this->capacidade; }
   float getPrecoDiaria() const{ return this->precoDiaria; }
   long getAnfitriaoResponsavelId() const { return this->anfitriaoResponsavelId; }
-  Tempo getDataAluguel() const{ return this->dataAluguel; }
-  bool getIsAlugado() const{ return this->isAlugado; }
+  vector<ImovelAlugado> getImoveisAlugados() const {return this->imoveisAlugados; }
   void setEndereco(string endereco) { this->endereco = endereco; }
-  void setHospedeId(long hospedeId) {this->hospedeId = hospedeId; }
   void setTipo(TiposImovel tipo) { this->tipo = tipo; }
   void setCapacidade(int capacidade) { this->capacidade = capacidade; }
   void setPrecoDiaria(float precoDiaria) { this->precoDiaria = precoDiaria; }
-  void setIsAlugado(bool isAlugado) { this->isAlugado = isAlugado; }
-  void setDataAluguel(int dia, int mes, int ano) {
-    this->dataAluguel = Tempo(dia, mes, ano);
-  }
+  void addImovelAlugado(ImovelAlugado imovelAlugado) { this->imoveisAlugados.push_back(imovelAlugado); }
+
 };
 
 int Imovel::quantidadeDeImoveis = 0;

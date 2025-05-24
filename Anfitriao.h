@@ -23,11 +23,6 @@ public:
                 cout << "Id do Imovel: " << imovel.getId() << endl;
                 cout << "Preco da diária: R$ " << imovel.getPrecoDiaria() << endl;
                 cout << "Endereço: " << imovel.getEndereco() << endl;
-                cout << "Data do aluguel: " << imovel.getDataAluguel().dia
-                     << "/" << imovel.getDataAluguel().mes
-                     << "/" << imovel.getDataAluguel().ano << endl;
-                cout << "Status: " << (imovel.getIsAlugado() ? "🔴 Reservado" : "🟢 Disponível") << endl;
-
                 cout << "--------------------------------------\n";
             }
         }
@@ -47,16 +42,10 @@ public:
         cin>>tipo;
         cout<<"Digite a capacidade: ";
         cin>>capacidade;
-        cout<<"Digite o dia: ";
-        cin>>dia;
-        cout<<"Digite o mes: ";
-        cin>>mes;
-        cout<<"Digite o ano: ";
-        cin>>ano;
         cout<<"Digite o preco da diaria: ";
         cin>>precoDiaria;
 
-        Imovel imovelCriado = Imovel(endereco, intToTipos(tipo), capacidade, precoDiaria, this->getId(), dia, mes, ano);
+        Imovel imovelCriado = Imovel(endereco, intToTipos(tipo), capacidade, precoDiaria, this->getId());
         this->imoveisCriados.push_back(imovelCriado);
         return imovelCriado;
     }
