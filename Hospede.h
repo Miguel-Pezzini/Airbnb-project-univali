@@ -8,7 +8,6 @@
 #include <iostream>
 #include <ctime>
 
-#include "BancoDeDados.h"
 #include "Usuario.h"
 #include "Imovel.h"
 
@@ -148,7 +147,7 @@ public:
 
         ImovelAlugado imovel_alugado = this->getImovelAlugado(imoveisAlugados, idImovelAlugado);
 
-        int diasAnterior = hoje.diasAte(imovel_alugado.getDataInicio());
+        int diasAnterior = Tempo::diasAte(hoje, imovel_alugado.getDataInicio());
 
         if (diasAnterior > 7) {
             throw std::runtime_error("O cancelamento da reserva so e possivel com 1 semana de antecedencia");

@@ -46,9 +46,9 @@ public:
                isMenorOuIgual(tempoFinal, tempoFinalComparar);
     }
 
-    int Tempo::diasAte(const Tempo& outra) const {
-        tm a = {0,0,0, this->dia, this->mes - 1, this->ano - 1900};
-        tm b = {0,0,0, outra.dia, outra.mes - 1, outra.ano - 1900};
+    static int diasAte(const Tempo& ta, const Tempo& tb) {
+        tm a = {0,0,0, tb.dia, tb.mes - 1, tb.ano - 1900};
+        tm b = {0,0,0, ta.dia, ta.mes - 1, ta.ano - 1900};
         time_t x = mktime(&a);
         time_t y = mktime(&b);
         double diff = difftime(y, x) / (60 * 60 * 24);
