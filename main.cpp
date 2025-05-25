@@ -20,6 +20,7 @@ int main() {
             limparTela();
           {
             Imovel imovelCriado = anfitriaoLogado.criarImovel();
+            bancoDeDados.salvarImovelArquivo(imovelCriado);
             bancoDeDados.adicionarImovel(imovelCriado);
           }
             break;
@@ -41,21 +42,22 @@ int main() {
           case 1:
             limparTela();
           {
-            ImovelAlugado imovelAlugado = hospedeLogado.alugarImovel(bancoDeDados.getImoveis());
+            ImovelAlugado imovelAlugado = hospedeLogado.alugarImovel(bancoDeDados.getImoveis(), bancoDeDados.getImoveisAlugados());
             bancoDeDados.salvarHospede(hospedeLogado);
-            bancoDeDados.salvarImovelAlugado(imovelAlugado);
             bancoDeDados.adicionarImovelAlugado(imovelAlugado);
+            bancoDeDados.salvarImovelAlugadoArquivo(imovelAlugado);
           }
           break;
           case 2:
             limparTela();
-             hospedeLogado.listarImoveisAlugadosAtivosHospede(bancoDeDados.getImoveis());
+             hospedeLogado.listarImoveisAlugadosAtivosHospede(bancoDeDados.getImoveis(), bancoDeDados.getImoveisAlugados());
           break;
           case 3:
             limparTela();
           {
             ImovelAlugado imovelCancelado = hospedeLogado.cancelarReserva(bancoDeDados.getImoveis(), bancoDeDados.getImoveisAlugados());
             bancoDeDados.salvarImovelAlugado(imovelCancelado);
+            bancoDeDados.reescreverImoveisAlugadosArquivo();
           }
 
           break;
@@ -81,5 +83,4 @@ int main() {
         return 0;
     }
   }
-  return 0;
 }

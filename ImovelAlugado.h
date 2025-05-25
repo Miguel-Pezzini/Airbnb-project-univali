@@ -15,9 +15,9 @@ class ImovelAlugado : public AbstractEntity {
     Tempo dataInicio;
     Tempo dataFinal;
     bool ativo;
-    static int quantidadeDeImoveisAlugados;
 
     public:
+    static int quantidadeDeImoveisAlugados;
     ImovelAlugado(long imovelId, long hospedeId, int diaInicio, int mesInicio,int anoInicio,int diaFinal,int mesFinal,int anoFinal)
       : AbstractEntity(quantidadeDeImoveisAlugados), dataInicio(diaInicio, mesInicio, anoInicio), dataFinal(diaFinal, mesFinal, anoFinal) {
       this->dataInicio = dataInicio;
@@ -32,6 +32,16 @@ class ImovelAlugado : public AbstractEntity {
       this->imovelId = -1;
       this->hospedeId = -1;
       this->ativo = false;
+    }
+
+  ImovelAlugado(long imovelId, long hospedeId, int diaInicio, int mesInicio,int anoInicio,int diaFinal,int mesFinal,int anoFinal, bool ativo, int id)
+    : AbstractEntity(id, true), dataInicio(diaInicio, mesInicio, anoInicio), dataFinal(diaFinal, mesFinal, anoFinal)
+     {
+      this->dataInicio = dataInicio;
+      this->dataFinal = dataFinal;
+      this->imovelId = imovelId;
+      this->ativo = ativo;
+      this->hospedeId = hospedeId;
     }
 
   Tempo getDataInicio() const { return dataInicio; }

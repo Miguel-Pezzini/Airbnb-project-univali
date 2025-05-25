@@ -6,7 +6,12 @@
 #include "Imovel.h"
 #include "Usuario.h"
 #include "ImovelAlugado.h"
+
 #include <vector>
+#include <fstream>
+#include <sstream>
+
+using namespace std;
 
 class Anfitriao;
 class Hospede;
@@ -25,6 +30,11 @@ public:
     this->hospedes = vector<Hospede>();
     this->usuarios = vector<Usuario>();
     this->imoveisAlugados = vector<ImovelAlugado>();
+
+    this->carregarAnfitrioes();
+    this->carregarHospedes();
+    this->carregarImoveisAlugados();
+    this->carregarImoveis();
   };
 
   vector<Imovel> getImoveis() {return this->imoveis;}
@@ -36,10 +46,14 @@ public:
   void adicionarImovelAlugado(const ImovelAlugado &imovelAlugado) { this->imoveisAlugados.push_back(imovelAlugado); }
 
   void criarAnfitriao(string nome, string senha, int telefone) {
-    this->adicionarAnfitriao(Anfitriao(nome, senha, telefone));
+    Anfitriao a(nome, senha, telefone);
+    this->adicionarAnfitriao(a);
+    this->salvarAnfitriaoArquivo(a);
   }
   void criarHospede(string nome, string senha, int telefone) {
-    this->adicionarHospede(Hospede(nome, senha, telefone));
+    Hospede h(nome, senha, telefone);
+    this->adicionarHospede(h);
+    this->salvarHospedeArquivo(h);
   }
 
   void salvarHospede(Hospede hospede) {
@@ -50,10 +64,10 @@ public:
     }
   }
 
-  void salvarImovelAlugado(ImovelAlugado imovelAlugado) {
-    for (int i = 0; i < this->imoveis.size(); i++) {
-      if (imovelAlugado.getImovelId() == this->imoveis.at(i).getId()) {
-        this->imoveis.at(i).addImovelAlugado(imovelAlugado);
+  void salvarImovelAlugado(ImovelAlugado imovel_alugado) {
+    for (int i = 0; i < this->imoveisAlugados.size(); i++) {
+      if (this->imoveisAlugados.at(i).getId() == imovel_alugado.getId()) {
+        this->imoveisAlugados.at(i) = imovel_alugado;
       }
     }
   }
@@ -93,6 +107,148 @@ public:
     }
 
     return -1;
+  }
+
+  void carregarHospedes() {
+    FILE* arquivo = fopen("hospedes.txt", "r");
+    if (!arquivo) return;
+
+    int id, telefone;
+    char nome[100], senha[100];
+
+    while (fscanf(arquivo, "%d,%99[^,],%99[^,],%d\n", &id, nome, senha, &telefone) == 4) {
+      Hospede h(nome, senha, telefone, id);
+      h.setId(id);
+      this->adicionarHospede(h);
+      Usuario::quantidadeDeUsuarios++;
+    }
+
+    fclose(arquivo);
+  }
+
+  void salvarHospedeArquivo(Hospede& h) {
+    FILE* arquivo = fopen("hospedes.txt", "a"); // modo append
+    if (!arquivo) return;
+
+    fprintf(arquivo, "%d,%s,%s,%d\n",
+            h.getId(), h.getNome().c_str(), h.getSenha().c_str(), h.getTelefone());
+
+    fclose(arquivo);
+  }
+
+  void carregarAnfitrioes() {
+    FILE* arquivo = fopen("anfitrioes.txt", "r");
+    if (!arquivo) return;
+
+    int id, telefone;
+    char nome[100], senha[100];
+
+    while (fscanf(arquivo, "%d,%99[^,],%99[^,],%d\n", &id, nome, senha, &telefone) == 4) {
+      Hospede h(nome, senha, telefone, id);
+      Usuario::quantidadeDeUsuarios++;
+      this->adicionarHospede(h);
+    }
+
+    fclose(arquivo);
+  }
+
+  void carregarImoveisAlugados() {
+    FILE* arquivo = fopen("imoveisAlugados.txt", "r");
+    if (!arquivo) return;
+
+    int id, imovelId, hospedeId;
+    int diaInicio, mesInicio, anoInicio;
+    int diaFinal, mesFinal, anoFinal;
+    int ativoInt; // bool como int
+
+    while (fscanf(arquivo, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
+                  &id, &imovelId, &hospedeId,
+                  &diaInicio, &mesInicio, &anoInicio,
+                  &diaFinal, &mesFinal, &anoFinal,
+                  &ativoInt) == 10) {
+
+      bool ativo = (ativoInt != 0);
+      ImovelAlugado::quantidadeDeImoveisAlugados++;
+      ImovelAlugado i(imovelId, hospedeId,
+                      diaInicio, mesInicio, anoInicio,
+                      diaFinal, mesFinal, anoFinal,
+                      ativo, id);
+
+      this->adicionarImovelAlugado(i);
+                  }
+
+    fclose(arquivo);
+  }
+
+  void salvarImovelAlugadoArquivo(ImovelAlugado& i) {
+    FILE* arquivo = fopen("imoveisAlugados.txt", "a");
+    if (!arquivo) return;
+
+    fprintf(arquivo, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
+            i.getId(), i.getImovelId(), i.getHospedeId(),
+            i.getDataInicio().getDia(), i.getDataInicio().getMes(), i.getDataInicio().getAno(),
+            i.getDataFinal().getDia(), i.getDataFinal().getMes(), i.getDataFinal().getAno(),
+            i.getAtivo() ? 1 : 0);
+
+    fclose(arquivo);
+  }
+
+  void reescreverImoveisAlugadosArquivo() {
+    FILE* arquivo = fopen("imoveisAlugados.txt", "w"); // sobrescreve tudo
+    if (!arquivo) return;
+
+    for (int i = 0; i < imoveisAlugados.size(); i++) {
+      ImovelAlugado& iAlugado = imoveisAlugados.at(i);
+      fprintf(arquivo, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
+              iAlugado.getId(), iAlugado.getImovelId(), iAlugado.getHospedeId(),
+              iAlugado.getDataInicio().getDia(), iAlugado.getDataInicio().getMes(), iAlugado.getDataInicio().getAno(),
+            iAlugado.getDataFinal().getDia(), iAlugado.getDataFinal().getMes(), iAlugado.getDataFinal().getAno(),
+              iAlugado.getAtivo() ? 1 : 0);
+    }
+
+    fclose(arquivo);
+  }
+
+  void carregarImoveis() {
+    FILE* arquivo = fopen("imoveis.txt", "r");
+    if (!arquivo) return;
+
+    int id, anfitriaoId, tipoImovelInt, capacidade;
+    float precoDiaria;
+    char endereco[100];
+    while (fscanf(arquivo, "%d,%d,%99[^,],%d,%d,%f\n",
+                  &id, &anfitriaoId, endereco,
+                  &tipoImovelInt, &capacidade, &precoDiaria) == 6) {
+
+      TiposImovel tipoImovel = intToTipos(tipoImovelInt);
+      Imovel::quantidadeDeImoveis++;
+      Imovel i(endereco, tipoImovel, capacidade, precoDiaria, anfitriaoId, id);
+
+      this->adicionarImovel(i);}
+
+
+    fclose(arquivo);
+  }
+
+  void salvarImovelArquivo(Imovel& i) {
+    FILE* arquivo = fopen("imoveis.txt", "a");
+    if (!arquivo) return;
+
+    fprintf(arquivo, "%d,%d,%s,%d,%d,%.2f\n",
+            i.getId(), i.getAnfitriaoResponsavelId(), i.getEndereco().c_str(),
+            tipoToInt(i.getTipo()), i.getCapacidade(), i.getPrecoDiaria());
+
+    fclose(arquivo);
+  }
+
+  void salvarAnfitriaoArquivo(Anfitriao& a) {
+    FILE* arquivo = fopen("anfitrioes.txt", "a"); // modo append
+    if (!arquivo) return;
+
+    fprintf(arquivo, "%d,%s,%s,%d\n",
+            a.getId(), a.getNome().c_str(), a.getSenha().c_str(), a.getTelefone());
+
+    fclose(arquivo);
   }
 };
 

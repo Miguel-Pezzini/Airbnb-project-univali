@@ -12,10 +12,11 @@
 #include "Imovel.h"
 
 class Anfitriao : public Usuario {
-    vector<Imovel> imoveisCriados;
 
 public:
     Anfitriao(string nome, string senha, int telefone) : Usuario(nome, senha, telefone) {}
+
+    Anfitriao(string nome, string senha, int telefone, int anfitriaoId) : Usuario(nome, senha, telefone, anfitriaoId) {}
 
     void listarImoveisCriados(vector<Imovel> imoveis) {
         for (const auto& imovel : imoveis) {
@@ -46,7 +47,6 @@ public:
         cin>>precoDiaria;
 
         Imovel imovelCriado = Imovel(endereco, intToTipos(tipo), capacidade, precoDiaria, this->getId());
-        this->imoveisCriados.push_back(imovelCriado);
         return imovelCriado;
     }
 };

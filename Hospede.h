@@ -14,11 +14,10 @@
 #include <vector>
 
 class Hospede : public Usuario {
-    vector<ImovelAlugado> imoveisAlugados;
 public:
-    Hospede(string nome, string senha, int telefone) : Usuario(nome, senha, telefone) {
-        this->imoveisAlugados = vector<ImovelAlugado>();
-    };
+    Hospede(string nome, string senha, int telefone) : Usuario(nome, senha, telefone) {};
+
+    Hospede(string nome, string senha, int telefone, int hospedeId) : Usuario(nome, senha, telefone, hospedeId) {};
 
     vector<Imovel> filtrarPorPreco(const vector<Imovel>& imoveis, float precoMIN, float precoMAX) {
         vector<Imovel> imoveisFiltrados;
@@ -40,7 +39,18 @@ public:
         return imoveisFiltrados;
     }
 
-    ImovelAlugado filtrarImoveis(vector<Imovel> imoveisTotais) {
+    vector<ImovelAlugado> getImoveisAlugados(int imovelId, vector<ImovelAlugado> imoveisAlugados) {
+        vector<ImovelAlugado> vecImoveisAlugados;
+        for (int i = 0; i < imoveisAlugados.size(); i++) {
+            if (imoveisAlugados[i].getImovelId() == imovelId) {
+                vecImoveisAlugados.push_back(imoveisAlugados.at(i));
+            }
+        }
+
+        return vecImoveisAlugados;
+    }
+
+    ImovelAlugado filtrarImoveis(vector<Imovel> imoveisTotais, vector<ImovelAlugado> paramImoveisAlugados) {
         int diaInicio, mesInicio, anoInicio, opcao;
         cout << "Qual o dia do inicio do aluguel? ";
         cin >> diaInicio;
@@ -60,7 +70,7 @@ public:
 
         vector<Imovel> imoveisFiltrados;
         for (int i = 0; i < imoveisTotais.size(); i++) {
-            vector<ImovelAlugado>imoveisAlugados = imoveisTotais.at(i).getImoveisAlugados();
+            vector<ImovelAlugado>imoveisAlugados = getImoveisAlugados(imoveisTotais.at(i).getId(), paramImoveisAlugados);
             bool valido = true;
             for (int j = 0; j < imoveisAlugados.size(); j++) {
                 if (Tempo::isBetween(dataInicio, dataFinal, imoveisAlugados.at(i).getDataInicio(), imoveisAlugados.at(j).getDataFinal())) {
@@ -123,12 +133,8 @@ public:
         throw std::runtime_error("Imovel alugado com ID " + std::to_string(idImovelAlugado) + " não encontrado.");
     }
 
-    ImovelAlugado alugarImovel(vector<Imovel> imoveis) {
-        ImovelAlugado imovelAlugado = this->filtrarImoveis(imoveis);
-
-        this->imoveisAlugados.push_back(imovelAlugado);
-
-        return imovelAlugado;
+    ImovelAlugado alugarImovel(vector<Imovel> imoveis, vector<ImovelAlugado> imovel_alugados) {
+        return this->filtrarImoveis(imoveis, imovel_alugados);
     }
 
     ImovelAlugado cancelarReserva(vector<Imovel> imoveis, vector<ImovelAlugado> imoveisAlugados) {
@@ -141,7 +147,7 @@ public:
         cout << "==============================\n";
         cout << "Atenção: só é possível cancelar reservas com no mínimo\n";
         cout << "1 semana de antecedência da data de início da estadia.\n";
-        this->listarImoveisAlugadosAtivosHospede(imoveis);
+        this->listarImoveisAlugadosAtivosHospede(imoveis, imoveisAlugados);
         cout << endl << "Digite o id da reserva";
         cin>>idImovelAlugado;
 
@@ -156,11 +162,13 @@ public:
         return imovel_alugado;
     }
 
-    void listarImoveisAlugadosAtivosHospede(vector<Imovel> imoveis) {
-        for (const auto& imovelAlugado : this->imoveisAlugados) {
+    void listarImoveisAlugadosAtivosHospede(vector<Imovel> imoveis, vector<ImovelAlugado> imoveisAlugados) {
+        for (const auto& imovelAlugado : imoveisAlugados) {
             if (!imovelAlugado.getAtivo() && this->getId() != imovelAlugado.getHospedeId()) return;
+            string status = imovelAlugado.getAtivo() ? "ATIVO" : "CANCELADO";
             Imovel imovel = getImovel(imoveis, imovelAlugado.getImovelId());
-                cout << "Id da reserva: " << imovel.getId() << endl;
+                cout << "Id da reserva: " << imovelAlugado.getId() << endl;
+                cout << "Id do Imovel: " << imovel.getId() << endl;
                 cout << "Preco da diária: R$ " << imovel.getPrecoDiaria() << endl;
                 cout << "Endereço: " << imovel.getEndereco() << endl;
                 cout << "Data do aluguel: " << imovelAlugado.getDataInicio().getDia()
@@ -169,6 +177,7 @@ public:
             << imovelAlugado.getDataFinal().getDia()
             << "/" << imovelAlugado.getDataFinal().getMes()
             << "/" << imovelAlugado.getDataFinal().getAno() << endl;
+            cout<< "Status da Reserva: "<< status << endl;
                 cout << "--------------------------------------\n";
         }
     }

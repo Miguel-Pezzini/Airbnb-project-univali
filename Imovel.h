@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 enum TiposImovel { CASA, APARTAMENTO, CHALE };
 
 TiposImovel intToTipos(int tipo) {
@@ -25,16 +24,29 @@ TiposImovel intToTipos(int tipo) {
   }
 }
 
+int tipoToInt(TiposImovel tipo) {
+  switch (tipo) {
+    case TiposImovel::CASA:
+      return 0;
+    case TiposImovel::APARTAMENTO:
+      return 1;
+    case TiposImovel::CHALE:
+      return 2;
+    default:
+      return 0;
+  }
+}
+
 class Imovel : public AbstractEntity {
   long anfitriaoResponsavelId;
   string endereco;
   TiposImovel tipo;
   int capacidade;
   float precoDiaria;
-  static int quantidadeDeImoveis;
-  vector<ImovelAlugado> imoveisAlugados;
+
 
 public:
+  static int quantidadeDeImoveis;
   Imovel(string endereco, TiposImovel tipo, int capacidade, float precoDiaria,
          long anfitriaoResponsavelId)
       : AbstractEntity(quantidadeDeImoveis) {
@@ -43,8 +55,17 @@ public:
     this->capacidade = capacidade;
     this->precoDiaria = precoDiaria;
     this->anfitriaoResponsavelId = anfitriaoResponsavelId;
-    this->imoveisAlugados = vector<ImovelAlugado>();
     quantidadeDeImoveis++;
+  }
+
+  Imovel(string endereco, TiposImovel tipo, int capacidade, float precoDiaria,
+        long anfitriaoResponsavelId, int id)
+     : AbstractEntity(id, true) {
+    this->endereco = endereco;
+    this->tipo = tipo;
+    this->capacidade = capacidade;
+    this->precoDiaria = precoDiaria;
+    this->anfitriaoResponsavelId = anfitriaoResponsavelId;
   }
 
   string getEndereco() const { return this->endereco; }
@@ -52,13 +73,10 @@ public:
   int getCapacidade() const { return this->capacidade; }
   float getPrecoDiaria() const{ return this->precoDiaria; }
   long getAnfitriaoResponsavelId() const { return this->anfitriaoResponsavelId; }
-  vector<ImovelAlugado> getImoveisAlugados() const {return this->imoveisAlugados; }
   void setEndereco(string endereco) { this->endereco = endereco; }
   void setTipo(TiposImovel tipo) { this->tipo = tipo; }
   void setCapacidade(int capacidade) { this->capacidade = capacidade; }
   void setPrecoDiaria(float precoDiaria) { this->precoDiaria = precoDiaria; }
-  void addImovelAlugado(ImovelAlugado imovelAlugado) { this->imoveisAlugados.push_back(imovelAlugado); }
-
 };
 
 int Imovel::quantidadeDeImoveis = 0;
