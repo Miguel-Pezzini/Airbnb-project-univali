@@ -40,10 +40,9 @@ public:
     }
     // 12/05/2025  // 15/05/2025
     // 20/05/2025  // 25/05/2025
-    static bool isBetween(const Tempo& tempoInicio, const Tempo& tempoFinal,
-                          const Tempo& tempoInicioComparar, const Tempo& tempoFinalComparar) {
-        return isMaiorOuIgual(tempoInicio, tempoInicioComparar) &&
-               isMenorOuIgual(tempoFinal, tempoFinalComparar);
+    static bool isBetween(const Tempo& inicioA, const Tempo& fimA,
+                       const Tempo& inicioB, const Tempo& fimB) {
+        return isMenorOuIgual(inicioA, fimB) && isMaiorOuIgual(fimA, inicioB);
     }
 
     static int diasAte(const Tempo& ta, const Tempo& tb) {

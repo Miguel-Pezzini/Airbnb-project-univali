@@ -42,7 +42,7 @@ public:
     vector<ImovelAlugado> getImoveisAlugados(int imovelId, vector<ImovelAlugado> imoveisAlugados) {
         vector<ImovelAlugado> vecImoveisAlugados;
         for (int i = 0; i < imoveisAlugados.size(); i++) {
-            if (imoveisAlugados[i].getImovelId() == imovelId) {
+            if (imoveisAlugados[i].getImovelId() == imovelId && imoveisAlugados[i].getAtivo()) {
                 vecImoveisAlugados.push_back(imoveisAlugados.at(i));
             }
         }
@@ -66,7 +66,7 @@ public:
         cin >> mesFinal;
         cout << "Qual o ano do final do aluguel? ";
         cin >> anoFinal;
-        Tempo dataFinal(diaInicio, mesInicio, anoInicio);
+        Tempo dataFinal(diaFinal, mesFinal, anoFinal);
 
         vector<Imovel> imoveisFiltrados;
         for (int i = 0; i < imoveisTotais.size(); i++) {
@@ -164,7 +164,7 @@ public:
 
     void listarImoveisAlugadosAtivosHospede(vector<Imovel> imoveis, vector<ImovelAlugado> imoveisAlugados) {
         for (const auto& imovelAlugado : imoveisAlugados) {
-            if (!imovelAlugado.getAtivo() || this->getId() != imovelAlugado.getHospedeId()) return;
+            if (!imovelAlugado.getAtivo() || this->getId() != imovelAlugado.getHospedeId()) continue;
             Imovel imovel = getImovel(imoveis, imovelAlugado.getImovelId());
                 cout << "Id da reserva: " << imovelAlugado.getId() << endl;
                 cout << "Id do Imovel: " << imovel.getId() << endl;
