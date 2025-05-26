@@ -12,6 +12,7 @@ int main() {
     if (idUsuarioLogado > 0) {
       while (isAnfitriao) {
         Anfitriao anfitriaoLogado = bancoDeDados.getAnfitriao(idUsuarioLogado);
+        anfitriaoLogado.greet();
         cout << "1 - Criar Imovel\n2 - Ver seus imoveis\n3 - Deslogar";
         cin>>option;
 
@@ -36,7 +37,8 @@ int main() {
       }
       while (isHospede) {
         Hospede hospedeLogado = bancoDeDados.getHospede(idUsuarioLogado);
-        cout << "1 - Alugar um Imovel\n2 - Ver seus imoveis alugados\n3 - Cancelar uma reserva\n4 - Deslogar";
+        hospedeLogado.greet();
+        cout << "1 - Reservar um Imovel\n2 - Ver suas reservas\n3 - Cancelar uma reserva\n4 - Deslogar";
         cin>>option;
         switch (option) {
           case 1:

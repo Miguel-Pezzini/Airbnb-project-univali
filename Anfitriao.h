@@ -49,6 +49,10 @@ public:
         Imovel imovelCriado = Imovel(endereco, intToTipos(tipo), capacidade, precoDiaria, this->getId());
         return imovelCriado;
     }
+
+    void greet() {
+        cout << "Olá, anfitrião " << this->getNome() << "!" << endl;
+    }
 };
 
 #endif //ANFITRIAO_H

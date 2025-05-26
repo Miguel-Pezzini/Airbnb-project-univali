@@ -164,8 +164,7 @@ public:
 
     void listarImoveisAlugadosAtivosHospede(vector<Imovel> imoveis, vector<ImovelAlugado> imoveisAlugados) {
         for (const auto& imovelAlugado : imoveisAlugados) {
-            if (!imovelAlugado.getAtivo() && this->getId() != imovelAlugado.getHospedeId()) return;
-            string status = imovelAlugado.getAtivo() ? "ATIVO" : "CANCELADO";
+            if (!imovelAlugado.getAtivo() || this->getId() != imovelAlugado.getHospedeId()) return;
             Imovel imovel = getImovel(imoveis, imovelAlugado.getImovelId());
                 cout << "Id da reserva: " << imovelAlugado.getId() << endl;
                 cout << "Id do Imovel: " << imovel.getId() << endl;
@@ -177,7 +176,6 @@ public:
             << imovelAlugado.getDataFinal().getDia()
             << "/" << imovelAlugado.getDataFinal().getMes()
             << "/" << imovelAlugado.getDataFinal().getAno() << endl;
-            cout<< "Status da Reserva: "<< status << endl;
                 cout << "--------------------------------------\n";
         }
     }
@@ -189,6 +187,10 @@ public:
             cout << "Endereço: " << imovel.getEndereco() << endl;
             cout << "--------------------------------------\n";
         }
+    }
+
+    void greet() {
+        cout << "Olá, hóspede " << this->getNome() << "!" << endl;
     }
 };
 

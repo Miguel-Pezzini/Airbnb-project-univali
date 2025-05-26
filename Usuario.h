@@ -31,6 +31,10 @@ public:
   int getTelefone() { return this->telefone; }
   void setNome(string nome) { this->nome = nome; }
   void setTelefone(int telefone) { this->telefone = telefone; }
+
+  void greet() {
+    cout << "Olá, usuário " << this->getNome() << "!" << endl;
+  }
 };
 
 int Usuario::quantidadeDeUsuarios = 0;
